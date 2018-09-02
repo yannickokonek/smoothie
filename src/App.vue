@@ -1,60 +1,80 @@
 <template>
-  <div id="app">
-    <img src="./assets/logo.png">
-    <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank">Twitter</a></li>
-    </ul>
-    <h2>Ecosystem</h2>
-    <ul>
-      <li><a href="http://router.vuejs.org/" target="_blank">vue-router</a></li>
-      <li><a href="http://vuex.vuejs.org/" target="_blank">vuex</a></li>
-      <li><a href="http://vue-loader.vuejs.org/" target="_blank">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
-    </ul>
-  </div>
+    <div id="app">
+        <b-card
+            title="Suche"
+            sub-title="Finde Dein Smoothie-Rezept, indem Du Zutaten eingibst"
+            >
+            <p class="card-text">
+                <label>Zutaten</label>
+                <input 
+                    :placeholder="ph"
+                    v-model="fruit"
+                    v-on:keyup.enter="addFruit">
+                </input>
+            </p>
+            <div>
+                <v-icon name="sync" scale="2" spin/>
+            </div>
+        </b-card>
+        <b-card
+            title="Ergebnisse"
+            sub-title="Hier siehst Du Deine eingegebenen Früchte">
+            <div>home<v-icon>home</v-icon>Icon</div>
+            <ul>
+                <li v-for="fruit in fruitList">{{fruit}} 
+                    <v-icon>remove</v-icon></li>
+            </ul>
+        </b-card>
+    </div>
+
 </template>
 
 <script>
-export default {
-  name: 'app',
-  data () {
-    return {
-      msg: 'Welcome to Your Vue.js App'
+    import {_} from 'vue-underscore';
+    //Search.vue
+    export default {
+        name: 'app',
+        data () {
+            return {
+                text1:'',
+                ph: 'Gib eine Frucht ein',
+                fruitList: [],
+                fruit:'',
+            }
+        },
+        methods: {
+            addFruit() {
+                this.fruitList.push(this.fruit);
+                this.fruitList = _.unique(this.fruitList);
+                this.fruit = '';
+            },
+        },
+        computed: {
+        }
     }
-  }
-}
 </script>
 
 <style lang="scss">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+label {
+    padding-top:4px;
+    padding-left:10px;
+    float:left;
+    display:block;
+    margin-left:5px;
 }
-
-h1, h2 {
-  font-weight: normal;
+input {
+    display:block;
+    padding-left:5px;
+    padding-right:5px;
+    border-radius:5px;
 }
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
 li {
-  display: inline-block;
-  margin: 0 10px;
+    background-color: coral;
+    margin: 5px;
+    width: fit-content;
+    border-radius: 5px;
 }
-
-a {
-  color: #42b983;
+ul {
+    list-style-type:none;
 }
 </style>
