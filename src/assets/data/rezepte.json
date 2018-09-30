@@ -4,13 +4,11 @@
 		"ingredients": [
 			{
 				"name": "Banane",
-				"quantity": 1,
-				"unit":"Stück"
+				"quantity": 1
 			},
 			{
 				"name": "Milch",
-				"quantity": 250,
-				"unit":"ml"
+				"quantity": 250
 			}
 		]
 	}

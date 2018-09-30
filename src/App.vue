@@ -21,10 +21,10 @@
                     sub-title="Hier siehst Du Deine eingegebenen Früchte">
                     <ul>
                         <li v-for="fruit in fruitList"
-                        :key="fruit"
-                        >{{fruit}} 
+                        :key="fruit.name"
+                        >{{fruit.name}}
                             <v-icon
-                                v-on:click="removeFruit"
+                                v-on:click="removeFruit(fruit)"
                             >remove_circle</v-icon></li>
                     </ul>
                 </b-card>
@@ -49,7 +49,7 @@
 <script>
     import {_} from 'vue-underscore';
     import rezepte from './assets/data/rezepte.json';
-    // import zutaten from './assets/data/zutaten.json';
+    import zutaten from './assets/data/zutaten.json';
     //Search.vue
     export default {
         name: 'app',
@@ -60,6 +60,7 @@
                 fruitList: [],
                 fruit:'',
                 recipes: rezepte,
+                ingredients: zutaten,
                 matchingRecipes:[],
             }
         },
@@ -67,14 +68,14 @@
             addFruit() {
                 // todo:
                 // find fruit in list and push that to the list
-                this.fruitList.push(this.fruit);
+                var fruit = _.findWhere(this.ingredients, {name: this.fruit});
+                this.fruitList.push(fruit);
                 this.fruitList = _.unique(this.fruitList);
                 this.fruit = '';
                 this.findrecipe();
             },
-            removeFruit(fruite) {   
-                debugger;  
-                this.fruitList = _.without(this.fruitList, fruite);
+            removeFruit(fruit) {                   
+                this.fruitList = _.filter(this.fruitList, function(f){return f.name != fruit.name});
                 this.findrecipe();
             },
             // finds all recipes that contains at most the given ingredients
@@ -89,10 +90,13 @@
                 this.matchingRecipes = recipes;  
             },
             containsAll(recipe) {
+                if (this.fruitList.length === 0){
+                    return false;
+                }
                 var found = true;
                 var foundCurrent = true;
-                _.each(this.fruitList, function(fruite) {
-                    foundCurrent = _.find(recipe.ingredients, function(ingd){return ingd.name === fruite;});
+                _.each(this.fruitList, function(fruit) {
+                    foundCurrent = _.find(recipe.ingredients, function(ingd){return ingd.name === fruit.name;});
                     found = found && (foundCurrent != undefined);
                 });
                 return found;
