@@ -68,39 +68,33 @@
             addFruit() {
                 // todo:
                 // find fruit in list and push that to the list
-                var fruit = _.findWhere(this.ingredients, {name: this.fruit});
+                var fruit = this.$_.findWhere(this.ingredients, {name: this.fruit});
                 this.fruitList.push(fruit);
-                this.fruitList = _.unique(this.fruitList);
+                this.fruitList = this.$_.unique(this.fruitList);
                 this.fruit = '';
-                this.findrecipe();
+                this.findRecipes();
             },
             removeFruit(fruit) {                   
-                this.fruitList = _.filter(this.fruitList, function(f){return f.name != fruit.name});
-                this.findrecipe();
+                this.fruitList = this.$_.filter(this.fruitList, function(f){return f.name != fruit.name});
+                this.findRecipes();
             },
-            // finds all recipes that contains at most the given ingredients
-            findrecipe() {
-                var recipes = [];
+            containsNothingElse(recipe) {
                 var self = this;
-                _.each(this.recipes, function(recipe){
-                    if (self.containsAll(recipe)){
-                        recipes.push(recipe);
-                    }
-                });
-                this.matchingRecipes = recipes;  
-            },
-            containsAll(recipe) {
-                if (this.fruitList.length === 0){
-                    return false;
-                }
                 var found = true;
-                var foundCurrent = true;
-                _.each(this.fruitList, function(fruit) {
-                    foundCurrent = _.find(recipe.ingredients, function(ingd){return ingd.name === fruit.name;});
-                    found = found && (foundCurrent != undefined);
+                this.$_.each(recipe.ingredients, function(i) {
+                    found = found && ( -1 < self.$_.findIndex(self.fruitList, function(fruit) {return fruit.name === i.name;}) );
                 });
-                return found;
-            }
+                return found; 
+            },
+
+            // finds all recipes that contains at most the given ingredients
+            findRecipes() {
+                if (this.fruitList.length === 0){
+                    return [];
+                }
+                var self = this;
+                this.matchingRecipes = this.$_.filter(this.recipes, function(recipe) {return self.containsNothingElse(recipe);});
+            },
         },
         computed: {
         }

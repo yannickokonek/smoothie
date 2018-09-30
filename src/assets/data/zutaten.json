@@ -6,5 +6,9 @@
 	{
 		"name":"Milch",
 		"unit":"ml"
+	},
+	{
+		"name":"Erdbeere",
+		"unit":"g"
 	}
 ]
