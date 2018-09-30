@@ -7,7 +7,7 @@
             <label>Zutaten</label>
             <input 
                 :placeholder="placeholder"
-                v-model="fruit"
+                v-model="ingredient"
                 v-on:keyup.enter="addFruit">
             </input>
             <div>
@@ -17,14 +17,14 @@
         <div class="row">
             <div class="col-sm-6">
                 <b-card
-                    title="Verfügbare Früchte"
-                    sub-title="Hier siehst Du Deine eingegebenen Früchte">
+                    title="Verfügbare Zutaten"
+                    sub-title="Hier siehst Du Deine eingegebenen Zutaten">
                     <ul>
-                        <li v-for="fruit in fruitList"
-                        :key="fruit.name"
-                        >{{fruit.name}}
+                        <li v-for="ingredient in ingredientList"
+                        :key="ingredient.name"
+                        >{{ingredient.name}}
                             <v-icon
-                                v-on:click="removeFruit(fruit)"
+                                v-on:click="removeFruit(ingredient)"
                             >remove_circle</v-icon></li>
                     </ul>
                 </b-card>
@@ -35,7 +35,7 @@
                     sub-title="Hier siehst Du die Ergebnisse">
                     <ul>
                         <li v-for="recipe in matchingRecipes"
-                        :key="fruit"
+                        :key="ingredient"
                         >{{recipe.name}}                             
                         </li>
                     </ul>
@@ -57,8 +57,8 @@
             return {
                 text1:'',
                 placeholder: 'Gib eine Frucht ein',
-                fruitList: [],
-                fruit:'',
+                ingredientList: [],
+                ingredient:'',
                 recipes: rezepte,
                 ingredients: zutaten,
                 matchingRecipes:[],
@@ -67,29 +67,28 @@
         methods: {
             addFruit() {
                 // todo:
-                // find fruit in list and push that to the list
-                var fruit = this.$_.findWhere(this.ingredients, {name: this.fruit});
-                this.fruitList.push(fruit);
-                this.fruitList = this.$_.unique(this.fruitList);
-                this.fruit = '';
+                var ingredient = this.$_.findWhere(this.ingredients, {name: this.ingredient});
+                this.ingredientList.push(ingredient);
+                this.ingredientList = this.$_.unique(this.ingredientList);
+                this.ingredient = '';
                 this.findRecipes();
             },
-            removeFruit(fruit) {                   
-                this.fruitList = this.$_.filter(this.fruitList, function(f){return f.name != fruit.name});
+            removeFruit(ingredient) {                   
+                this.ingredientList = this.$_.filter(this.ingredientList, function(f){return f.name != ingredient.name});
                 this.findRecipes();
             },
             containsNothingElse(recipe) {
                 var self = this;
                 var found = true;
                 this.$_.each(recipe.ingredients, function(i) {
-                    found = found && ( -1 < self.$_.findIndex(self.fruitList, function(fruit) {return fruit.name === i.name;}) );
+                    found = found && ( -1 < self.$_.findIndex(self.ingredientList, function(ingredient) {return ingredient.name === i.name;}) );
                 });
                 return found; 
             },
 
             // finds all recipes that contains at most the given ingredients
             findRecipes() {
-                if (this.fruitList.length === 0){
+                if (this.ingredientList.length === 0){
                     return [];
                 }
                 var self = this;
