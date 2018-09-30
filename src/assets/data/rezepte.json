@@ -1,0 +1,17 @@
+[
+	{
+		"name": "Bananen-Shake",
+		"ingredients": [
+			{
+				"name": "Banane",
+				"quantity": 1,
+				"unit":"Stück"
+			},
+			{
+				"name": "Milch",
+				"quantity": 250,
+				"unit":"ml"
+			}
+		]
+	}
+]
