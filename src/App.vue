@@ -15,7 +15,7 @@
             </div>
         </b-card>
         <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-4 col-xs-12">
                 <b-card
                     title="Verfügbare Zutaten"
                     sub-title="Hier siehst Du Deine eingegebenen Zutaten">
@@ -29,12 +29,24 @@
                     </ul>
                 </b-card>
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-4 col-xs-12">
                 <b-card
                     title="Gefundene Rezepte"
                     sub-title="Hier siehst Du die Ergebnisse">
                     <ul>
-                        <li v-for="recipe in matchingRecipes"
+                        <li v-for="recipe in matchingAllIngredients"
+                        :key="ingredient"
+                        >{{recipe.name}}                             
+                        </li>
+                    </ul>
+                </b-card>
+            </div>
+            <div class="col-sm-4 col-xs-12">
+                <b-card
+                    title="Rezepte mit fehlenden Zutaten"
+                    sub-title="Hier siehst Du die Ergebnisse">
+                    <ul>
+                        <li v-for="recipe in matchingMostIngredients"
                         :key="ingredient"
                         >{{recipe.name}}                             
                         </li>
@@ -61,7 +73,8 @@
                 ingredient:'',
                 recipes: rezepte,
                 ingredients: zutaten,
-                matchingRecipes:[],
+                matchingAllIngredients:[],
+                matchingMostIngredients:[],
             }
         },
         methods: {
@@ -85,6 +98,18 @@
                 });
                 return found; 
             },
+            containsMoreThanHalf(recipe) {
+                var self = this;
+                var found = 0;
+                var neededMatches = Math.floor(recipe.ingredients.length/2);
+                this.$_.each(recipe.ingredients, function(i) {
+                    if ( -1 < self.$_.findIndex(self.ingredientList, 
+                        function(ingredient) {return ingredient.name === i.name;})) {
+                        found +=1;
+                    }
+                });
+                return (found >= neededMatches);   
+            },
 
             // finds all recipes that contains at most the given ingredients
             findRecipes() {
@@ -92,7 +117,17 @@
                     return [];
                 }
                 var self = this;
-                this.matchingRecipes = this.$_.filter(this.recipes, function(recipe) {return self.containsNothingElse(recipe);});
+                this.matchingAllIngredients = [];
+                this.matchingMostIngredients = [];
+                for (var i=0; i<this.recipes.length; i++) {
+                    if (this.containsNothingElse(this.recipes[i])) {
+                        this.matchingAllIngredients.push(this.recipes[i]);
+                        continue;
+                    } 
+                    if (this.containsMoreThanHalf(this.recipes[i])) {
+                        this.matchingMostIngredients.push(this.recipes[i]);                      
+                    }                     
+                }
             },
         },
         computed: {
