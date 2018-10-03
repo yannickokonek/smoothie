@@ -18,15 +18,12 @@
             <div class="col-sm-4 col-xs-12">
                 <b-card
                     title="Verfügbare Zutaten"
-                    sub-title="Hier siehst Du Deine eingegebenen Zutaten">
-                    <ul>
-                        <li v-for="ingredient in ingredientList"
-                        :key="ingredient.name"
-                        >{{ingredient.name}}
-                            <v-icon
-                                v-on:click="removeFruit(ingredient)"
-                            >remove_circle</v-icon></li>
-                    </ul>
+                    sub-title="Hier siehst Du die eingegebenen Zutaten"
+                    >
+                    <list-card v-bind:list="ingredientList"
+                        v-bind:display="displayIngredients"
+                        v-on:item-event="removeFruit">
+                    </list-card>
                 </b-card>
             </div>
             <div class="col-sm-4 col-xs-12">
@@ -54,6 +51,39 @@
                 </b-card>
             </div>
         </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <b-card
+                    title="Rezept hinzufügen"
+                    sub-title="Wenn Du ein neues Rezept hinzufügst, werden die verwendeten Zutaten automatisch zu den verfügbaren Zutaten hinzugefügt">
+                    <b-form>
+                        <b-form-group>
+                            <label class="sr-only" for="inlineFormInputName2">Name</label>
+                            <b-input class="mb-2 mr-sm-2 mb-sm-0" id="inlineFormInputName2" placeholder="Rezeptname" />
+                        </b-form-group>
+                        <b-form-group>
+                            <label class="sr-only" for="inlineFormInputGroupUsername2">Zutaten</label>
+                            <b-input class="mb-2 mr-sm-2 mb-sm-0" id="inlineFormInputName2" placeholder="Rezeptname" />
+                        </b-form-group>
+                        <b-form-group>
+                            <label class="sr-only" for="inlineFormInputGroupUsername2">Zutaten
+                            </label>
+                            <b-input-group left="@" class="mb-2 mr-sm-2 mb-sm-0">
+                            <b-input id="inlineFormInputGroupUsername2" placeholder="Username" />
+                            </b-input-group>
+                            <b-button variant="primary">Save</b-button>
+                        </b-form-group>
+                    </b-form>
+                </b-card>
+            </div>
+            <div class="col-sm-6">
+                <b-card
+                    title="Zutat hinzufügen"
+                    >
+
+                </b-card>
+            </div>
+        </div>
     </div>
 
 </template>
@@ -62,9 +92,13 @@
     import {_} from 'vue-underscore';
     import rezepte from './assets/data/rezepte.json';
     import zutaten from './assets/data/zutaten.json';
+    import listCard from './list_card.vue';
     //Search.vue
     export default {
         name: 'app',
+        components: {
+            listCard:listCard,
+        },
         data () {
             return {
                 text1:'',
@@ -75,11 +109,16 @@
                 ingredients: zutaten,
                 matchingAllIngredients:[],
                 matchingMostIngredients:[],
-            }
+                fields: [
+                    {
+                        name: "Zutat",
+                        placeholder: "placeholder",
+                    }
+                ]
+            };
         },
         methods: {
             addFruit() {
-                // todo:
                 var ingredient = this.$_.findWhere(this.ingredients, {name: this.ingredient});
                 this.ingredientList.push(ingredient);
                 this.ingredientList = this.$_.unique(this.ingredientList);
@@ -113,12 +152,12 @@
 
             // finds all recipes that contains at most the given ingredients
             findRecipes() {
+                this.matchingAllIngredients = [];
+                this.matchingMostIngredients = [];
                 if (this.ingredientList.length === 0){
                     return [];
                 }
                 var self = this;
-                this.matchingAllIngredients = [];
-                this.matchingMostIngredients = [];
                 for (var i=0; i<this.recipes.length; i++) {
                     if (this.containsNothingElse(this.recipes[i])) {
                         this.matchingAllIngredients.push(this.recipes[i]);
@@ -128,6 +167,12 @@
                         this.matchingMostIngredients.push(this.recipes[i]);                      
                     }                     
                 }
+            },
+            displayIngredients(item) {
+                return item.name;
+            },
+            addRecipe() {
+                // todo
             },
         },
         computed: {
