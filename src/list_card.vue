@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<input 
+		<input
 			:placeholder="defaultText"
 			v-model="listItem"
 			v-on:keyup.enter="addItem">
@@ -42,12 +42,12 @@
 			}
 		},
 		methods: {
-			removeItem(item) {     
+			removeItem(item) {
 				this.list = this.$_.filter(this.list, function(f){return f.name != item.name});
 				this.$emit('update-list', this.list);
 			},
 			addItem() {
-				var item = this.$_.findWhere(this.availableItems, {name: this.listItem}) || {name:this.listItem}; 
+				var item = this.$_.findWhere(this.availableItems, {name: this.listItem}) || {name:this.listItem};
 				// todo: if no item is found, add it just like this.
 				this.list.push(item);
 				this.list = this.$_.unique(this.list);

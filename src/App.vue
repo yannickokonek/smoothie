@@ -21,7 +21,7 @@
 					<ul>
 						<li v-for="recipe in matchingAllIngredients"
 						:key="ingredient"
-						>{{recipe.name}}                             
+						>{{recipe.name}}
 						</li>
 					</ul>
 				</b-card>
@@ -33,7 +33,7 @@
 					<ul>
 						<li v-for="recipe in matchingMostIngredients"
 						:key="ingredient"
-						>{{recipe.name}}                             
+						>{{recipe.name}}
 						</li>
 					</ul>
 				</b-card>
@@ -96,13 +96,13 @@
 			// addFruite searches the entered ingredient in the total list of ingredients and adds it
 			// to the current list, if it existed
 			addFruit() {
-				var ingredient = this.$_.findWhere(this.ingredients, {name: this.ingredient});				
+				var ingredient = this.$_.findWhere(this.ingredients, {name: this.ingredient});
 				this.ingredientList.push(ingredient);
 				this.ingredientList = this.$_.unique(this.ingredientList);
 				this.ingredient = '';
 				this.findRecipes();
 			},
-			removeFruit(list) {                   
+			removeFruit(list) {
 				// this.ingredientList = this.$_.filter(this.ingredientList, function(f){return f.name != ingredient.name});
 				debugger;
 				this.ingredients = list
@@ -114,19 +114,19 @@
 				this.$_.each(recipe.ingredients, function(i) {
 					found = found && ( -1 < self.$_.findIndex(self.ingredientList, function(ingredient) {return ingredient.name === i.name;}) );
 				});
-				return found; 
+				return found;
 			},
 			containsMoreThanHalf(recipe) {
 				var self = this;
 				var found = 0;
 				var neededMatches = Math.floor(recipe.ingredients.length/2);
 				this.$_.each(recipe.ingredients, function(i) {
-					if ( -1 < self.$_.findIndex(self.ingredientList, 
+					if ( -1 < self.$_.findIndex(self.ingredientList,
 						function(ingredient) {return ingredient.name === i.name;})) {
 						found +=1;
 					}
 				});
-				return (found >= neededMatches);   
+				return (found >= neededMatches);
 			},
 
 			// finds all recipes that contains at most the given ingredients
@@ -139,10 +139,10 @@
 					if (this.containsNothingElse(this.recipes[i])) {
 						this.matchingAllIngredients.push(this.recipes[i]);
 						continue;
-					} 
+					}
 					if (this.containsMoreThanHalf(this.recipes[i])) {
-						this.matchingMostIngredients.push(this.recipes[i]);                      
-					}                     
+						this.matchingMostIngredients.push(this.recipes[i]);
+					}
 				}
 			},
 			displayIngredients(item) {
@@ -189,7 +189,7 @@ body {
 	background-color:#ddd;
 	padding:30px;
 }
-.card {	
+.card {
 	margin-bottom:30px;
 }
 </style>
