@@ -4,12 +4,15 @@
 		"ingredients": [
 			{
 				"name": "Banane",
-				"quantity": 1
+				"quantity": 1,
+				"unit": "Stück"
 			},
 			{
 				"name": "Milch",
-				"quantity": 250
+				"quantity": 250,
+				"unit":"ml"
 			}
-		]
+		],
+		"instructions":"Alle Zutaten in einen Mixer geben und gründlich mixen."
 	}
 ]

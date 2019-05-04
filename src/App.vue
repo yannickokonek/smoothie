@@ -90,9 +90,6 @@
 			};
 		},
 		methods: {
-			updateIngredientList() {
-
-			},
 			// addFruite searches the entered ingredient in the total list of ingredients and adds it
 			// to the current list, if it existed
 			addFruit() {
@@ -153,8 +150,21 @@
 			},
 			addRecipe(recipe) {
 				// todo
-				console.log('adding recipe: ', recipe);
+				debugger;
+				this.updateIngredientList(recipe.ingredients);
+				this.recipes.push(recipe)
 			},
+			updateIngredientList(list) {
+				var self = this;
+				for (var i=0; i<list.length; i++) {
+					var x =this.$_.findWhere(this.ingredients, {"name":list[i].name});
+					if (!x) {
+						this.ingredients.push(list[i]);
+					}
+				}
+			},
+
+
 		},
 		computed: {
 		}
