@@ -42,7 +42,7 @@
 		<div class="row">
 			<div class="col-sm-6">
 				<create-recipe
-					v-bind:existingIngredients="ingredientList"
+					v-bind:existingIngredients="ingredients"
 					v-on:save-recipe="addRecipe">
 				</create-recipe>
 			</div>

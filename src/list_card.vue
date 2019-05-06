@@ -8,12 +8,18 @@
 				v-on:keyup="lookUp"
 				>
 			</input>
-			<div class="search-results">
+			<div class="search-results" v-if="searchResults.length!==0 && listItem!=''">
 					<ul>
 						<li v-for="(item, index) in searchResults"
 							key:="item"
-							v-bind:tabindex="index">
-							{{item}}
+							v-bind:tabindex="index"
+							v-bind:class="highlight(index)">
+							<char-highlight
+								v-bind:word="item"
+								v-bind:matches="matchMatrix[index]">
+							</char-highlight>
+
+
 						</li>
 					</ul>
 			</div>
@@ -29,12 +35,18 @@
 </template>
 <script type="text/javascript">
 
+	import charHighlight from './char_highlight.vue';
 	export default {
+		components: {
+			charHighlight
+		},
 		data () {
 			return {
 				listItem: '',
 				list: [],
-				searchResults: ["Banane", "Erdbeere", "Melone"]
+				searchResults: [],
+				selectedResult:0,
+				matchMatrix: []
 			}
 		},
 		props: {
@@ -56,23 +68,54 @@
 			}
 		},
 		methods: {
+			highlight: function(index) {
+				return index===this.selectedResult? "selected":"";
+			},
 			removeItem(item) {
 				this.list = this.$_.filter(this.list, function(f){return f.name != item.name});
 				this.$emit('update-list', this.list);
 			},
-			lookUp() {
+			lookUp(e) {
 				if(this.listItem==="") {
 					return;
 				}
-				var results = this.fuzzySearch(this.listItem, this.availableItems);
-				console.log("results: ", results);
+				e.preventDefault();
+				if (e.key==="ArrowDown" || e.key==="ArrowRight" || e.key==="Tab") {
+					this.selectedResult =Math.min((this.selectedResult +1)%3, this.searchResults.length-1);
+					console.log('selecged: ', this.selectedResult);
+					return;
+				}
+				if (e.key==="ArrowUp" || e.key==="ArrowLeft") {
+					this.selectedResult =Math.min(Math.max((this.selectedResult -1)%3, 0), this.searchResults.length);
+					console.log('selecged: ', this.selectedResult);
+					return;
+				} else {
+					var results = this.fuzzySearch(this.listItem, this.$_.pluck(this.availableItems, "name"));
+
+					this.selectedResult = 0;
+					this.searchResults=[];
+					this.matchMatrix=[];
+					if (results === undefined) {
+						return;
+					}
+					results = results.slice(0,3);
+					for (var i=0; i<results.length;i++) {
+						this.searchResults.push(results[i][1]);
+						this.matchMatrix.push(results[i][2]);
+					}
+				}
 			},
 			addItem() {
+				// todo: nur wenn der User etwas markiert hat, einen Vorschlag verwenden
+				if (this.searchResults.length>0) {
+					this.listItem = this.searchResults[this.selectedResult];
+				}
 				var item = this.$_.findWhere(this.availableItems, {name: this.listItem}) || {name:this.listItem};
 				this.list.push(item);
 				// todo: remove duplicates.
 				this.listItem = '';
 				this.$emit('update-list', this.list);
+				this.searchResults = [];
 			},
 
 			fuzzySearch: function(searchstring, possibleResults) {
@@ -80,20 +123,24 @@
 				var matches = [];
 				var masks =[];
 				var self = this;
+				searchstring = searchstring.toLowerCase();
 				this.$_.each(possibleResults, function(result, index) {
-					masks[index]=new Array(result.name.length).fill(0);
+					masks[index]=new Array(result.length).fill(0);
 				});
 				// build match matrix
 				this.$_.each(possibleResults, function(result, index) {
 					var ind = 0;
+					result = result.toLowerCase();
 					for (var i=0; i< searchstring.length;i++) {
 						var c = searchstring[i];
 						// found character
-						if (result.name.indexOf(c, ind)!==-1) {
-							ind = result.name.indexOf(c, ind);
+						if (result.indexOf(c, ind)!==-1) {
+							ind = result.indexOf(c, ind);
 							masks[index][ind] =1;
+							ind++;
 						} else {
-							masks[index] = [];
+							// does not match anymore, remove matches
+							masks[index].fill(0);
 							break;
 						}
 					}
@@ -124,21 +171,25 @@
 				this.$_.each(masks, function(matrix, index) {
 					if (matrix.length===0) {
 						scores.push(-1);
+					} else {
+
+						var streaks = matchStreaks(matrix);
+						var score = 0;
+						self.$_.each(streaks, function(streak) {
+							score += streak;
+						});
+						score += self.$_.max(streaks);
+						scores.push(score);
 					}
-					var streaks = matchStreaks(matrix);
-					var score = 0;
-					self.$_.each(streaks, function(streak) {
-						score += streak;
-					});
-					score += self.$_.max(streaks);
-					scores.push(score);
 				});
 				if (this.$_.max(scores)<=0) {
 					return undefined;
 				}
-				var ranking = this.$_.zip(possibleResults, scores);
-				ranking = this.$_.filter(ranking, function(item) {return item[1]>0});
-				debugger;
+				// todo sort scores and save indizes
+				// than sort items by this index
+				var ranking = this.$_.zip(scores, possibleResults, masks);
+				ranking = this.$_.filter(ranking, function(item) {return item[0]>0});
+				// todo return only the sorted
 				return this.$_.sortBy(ranking, function(item) {return -item[1]});
 			}
 		}
@@ -157,14 +208,14 @@
 		width: 100%;
 	}
 	.search-results {
-		opacity: .8;
+		/*opacity: .3;*/
 		position: absolute;
 		top: 30px;
 		left: 0;
 		width: 100%;
 		height: 100px;
 		background: white;
-		color: grey;
+		color: black;
 		padding: 5px;
 		z-index: 3;
 	}
@@ -172,7 +223,7 @@
 		background-color: transparent;
 		list-style: none;
 	}
-	.search-results li:focus {
+	.search-results li.selected {
 	  background: #eee;
 	}
 </style>
