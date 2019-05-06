@@ -106,12 +106,14 @@
 				}
 			},
 			addItem() {
-				// todo: nur wenn der User etwas markiert hat, einen Vorschlag verwenden
 				if (this.searchResults.length>0) {
 					this.listItem = this.searchResults[this.selectedResult];
 				}
 				var item = this.$_.findWhere(this.availableItems, {name: this.listItem}) || {name:this.listItem};
-				this.list.push(item);
+				// item not already added? -> add
+				if (this.$_.findWhere(this.list, {name: this.listItem}) === undefined) {
+					this.list.push(item);
+				}
 				// todo: remove duplicates.
 				this.listItem = '';
 				this.$emit('update-list', this.list);
