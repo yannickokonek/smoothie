@@ -11,11 +11,15 @@
 					/>
 				<label for="description">Zutaten
 				</label>
-				<list-card v-bind:list="ingredientList"
+				<search
 					v-bind:defaultText="enterFruit"
-					v-bind:display="function(item) {return item.name}"
 					v-bind:availableItems="existingIngredients"
-					v-on:update-list="updateIngredients"
+					v-on:update-list="updateIngredients">
+				</search>
+				<list-card
+					v-bind:display="function(item) {return item.name}"
+					v-bind:list="ingredientList"
+					v-on:remove-item="removeIngredient"
 					>
 				</list-card>
 			</div>
@@ -38,22 +42,22 @@
 <script type="text/javascript">
 
 	import listCard from './list_card.vue';
+	import search from './search.vue';
 	export default {
 		components: {
-			listCard
+			listCard,
+			search
 		},
 		data () {
 			return {
 				recipeNamePlaceholder: 'Rezeptname',
 				recipeName: '',
-				ingredientPlaceholder: 'gib eine Zutat ein',
 				ingredient: '',
 				ingredientList:[],
 				recipeDescription:  'Anleitung',
 				description:'',
 				recipe: {},
 				enterFruit: "Gib eine Zutat ein",
-				// the data to use in this template (aside from properties)
 			}
 		},
 		props: {
@@ -75,7 +79,7 @@
 				this.ingredient = ''
 			},
 			removeIngredient: function(ingredient) {
-				this.ingredientList = this.$_.filter(this.ingredientList, function(f){return f.name != ingredient});
+				this.ingredientList = this.$_.filter(this.ingredientList, function(f){return f.name != ingredient.name});
 			},
 			save: function() {
 				this.recipe.ingredients = this.ingredientList;

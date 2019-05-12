@@ -6,11 +6,16 @@
 					title="Verfügbare Zutaten"
 					sub-title="Hier siehst Du die eingegebenen Zutaten"
 					>
-					<list-card
-						v-bind:display="displayIngredients"
+					<search
 						v-bind:defaultText="enterIngredient"
 						v-bind:availableItems="ingredients"
 						v-on:update-list="findRecipes">
+					</search>
+
+					<list-card
+						v-bind:display="displayIngredients"
+						v-bind:list="ingredientList"
+						v-on:remove-item="removeIngredient"item
 					</list-card>
 				</b-card>
 			</div>
@@ -64,12 +69,13 @@
 	import zutaten from './assets/data/zutaten.json';
 	import listCard from './list_card.vue';
 	import createRecipe from './create_recipe.vue';
-	//Search.vue
+	import search from './search.vue';
 	export default {
 		name: 'app',
 		components: {
 			listCard:listCard,
 			createRecipe:createRecipe,
+			search,
 		},
 		data () {
 			return {
@@ -90,19 +96,8 @@
 			};
 		},
 		methods: {
-			// addFruite searches the entered ingredient in the total list of ingredients and adds it
-			// to the current list, if it existed
-			addFruit() {
-				var ingredient = this.$_.findWhere(this.ingredients, {name: this.ingredient});
-				this.ingredientList.push(ingredient);
-				this.ingredientList = this.$_.unique(this.ingredientList);
-				this.ingredient = '';
-				this.findRecipes();
-			},
-			removeFruit(list) {
-				// this.ingredientList = this.$_.filter(this.ingredientList, function(f){return f.name != ingredient.name});
-				debugger;
-				this.ingredients = list
+			removeIngredient(item) {
+				this.ingredients = this.$_.filter(this.ingredients, function(f){return f.name != item.name});
 				this.findRecipes();
 			},
 			containsNothingElse(recipe) {
@@ -149,8 +144,6 @@
 				return item.name;
 			},
 			addRecipe(recipe) {
-				// todo
-				debugger;
 				this.updateIngredientList(recipe.ingredients);
 				this.recipes.push(recipe)
 			},
@@ -163,8 +156,6 @@
 					}
 				}
 			},
-
-
 		},
 		computed: {
 		}
