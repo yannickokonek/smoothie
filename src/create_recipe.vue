@@ -2,8 +2,8 @@
 	<b-card
 		title="Rezept hinzufügen">
 		<p>Wenn Du ein neues Rezept hinzufügst, werden die verwendeten Zutaten automatisch zu den verfügbaren Zutaten hinzugefügt</p>
-		<div class="row">
-			<div class="col-lg-6">
+		<b-row>
+			<b-col>
 				<label for="recipeName">Name</label>
 				<input class="mb-2 mr-sm-2 mb-sm-0" id="recipeName"
 					:placeholder="recipeNamePlaceholder"
@@ -16,14 +16,27 @@
 					v-bind:availableItems="existingIngredients"
 					v-on:update-list="updateIngredients">
 				</search>
-				<list-card
-					v-bind:display="function(item) {return item.name}"
-					v-bind:list="ingredientList"
-					v-on:remove-item="removeIngredient"
-					>
-				</list-card>
-			</div>
-			<div class="col-lg-6">
+				<div>
+					<ul>
+						<li class="editable-ingredient"
+							v-for="(item, index) in ingredientList">
+							<b-row>
+								<b-col cols="5">
+									<span class="text-large">{{item.name}}</span>
+									<span class="text-medium">{{item.quantity}} {{item.unit}}</span>
+									</b-col>
+								<b-col>
+									<edit-ingredient
+										v-bind:item="item"
+										v-bind:index="index">
+									</edit-ingredient>
+								</b-col>
+								</b-row>
+						</li>
+					</ul>
+				</div>
+			</b-col>
+			<b-col>
 			<label>Zubereitung</label>
 				<textarea id="description"
 					:placeholder="recipeDescription"
@@ -35,18 +48,20 @@
 					:prop="recipe"
 					v-on:click="save">
 				Rezept speichern</b-button>
-			</div>
-		</div>
+			</b-col>
+		</b-row>
 	</b-card>
 </template>
 <script type="text/javascript">
 
 	import listCard from './list_card.vue';
 	import search from './search.vue';
+	import editIngredient from './edit_ingredient.vue';
 	export default {
 		components: {
 			listCard,
-			search
+			search,
+			editIngredient
 		},
 		data () {
 			return {
@@ -100,5 +115,18 @@
 	}
 	.pull-right {
 		float: right;
+	}
+	li.editable-ingredient {
+		width: 100%;
+	}
+	.text-large {
+		font-size: 1.2em;
+		font-weight: 511;
+		color: #666;
+	}
+	.text-medium {
+		font-size: 1.1em;
+		font-weight: 511;
+		color: #666;
 	}
 </style>

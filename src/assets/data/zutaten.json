@@ -1,14 +1,17 @@
 [
 	{
 		"name":"Banane",
-		"unit":"Stück"
+		"unit":"Stück",
+		"quantity": 0
 	},
 	{
 		"name":"Milch",
-		"unit":"ml"
+		"unit":"ml",
+		"quantity": 0
 	},
 	{
 		"name":"Erdbeere",
-		"unit":"g"
+		"unit":"g",
+		"quantity": 0
 	}
 ]
