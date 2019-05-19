@@ -1,15 +1,14 @@
 <template>
-	<b-card
-		title="Rezept hinzufügen">
-		<p>Wenn Du ein neues Rezept hinzufügst, werden die verwendeten Zutaten automatisch zu den verfügbaren Zutaten hinzugefügt</p>
+	<b-card>
 		<b-row>
 			<b-col>
-				<label for="recipeName">Name</label>
-				<input class="mb-2 mr-sm-2 mb-sm-0" id="recipeName"
+				<h4>Rezept erstellen</h4>
+				<label class="sr-only" for="recipeName">Name</label>
+				<input class="mb-2" id="recipeName"
 					:placeholder="recipeNamePlaceholder"
 					v-model="recipeName"
 					/>
-				<label for="description">Zutaten
+				<label class="sr-only" for="description">Zutaten
 				</label>
 				<search
 					v-bind:defaultText="enterFruit"
@@ -19,12 +18,11 @@
 				<div>
 					<ul>
 						<li class="editable-ingredient"
-							v-for="(item, index) in ingredientList">
+							v-for="item in ingredientList">
 							<b-row>
 								<b-col cols="5">
-									<span class="text-large">{{item.name}}</span>
-									<span class="text-medium">{{item.quantity}} {{item.unit}}</span>
-									</b-col>
+									<display-ingredient v-bind:item="item"></display-ingredient>
+								</b-col>
 								<b-col>
 									<edit-ingredient
 										v-bind:item="item"
@@ -35,21 +33,33 @@
 						</li>
 					</ul>
 				</div>
+				<label class="sr-only" for="description">Zubereitung</label>
+					<textarea id="description"
+						class="mb-2"
+						:placeholder="recipeDescription"
+						v-model="description"
+						v-on:keyup.enter="updateDescription"
+						>
+					</textarea>
 			</b-col>
 			<b-col>
-			<label>Zubereitung</label>
-				<textarea id="description"
-					:placeholder="recipeDescription"
-					v-model="description"
-					v-on:keyup.enter="updateDescription"
-					>
-				</textarea>
-				<b-button variant="primary" class="pull-right"
-					:prop="recipe"
-					v-on:click="save">
-				Rezept speichern</b-button>
+				<h4>Vorschau</h4>
+				<h4 >{{recipeName}}</h4>
+
+				<h5>Zutaten:</h5>
+				<ul>
+					<li v-for="item in ingredientList">
+						<display-ingredient v-bind:item="item"></display-ingredient>
+					</li>
+				</ul>
+				<h5>Zubereitung:</h5>
+				<p>{{description}}</p>
 			</b-col>
 		</b-row>
+					<b-button variant="primary" class="pull-right"
+						:prop="recipe"
+						v-on:click="save">
+					Rezept speichern</b-button>
 	</b-card>
 </template>
 <script type="text/javascript">
@@ -57,11 +67,13 @@
 	import listCard from './list_card.vue';
 	import search from './search.vue';
 	import editIngredient from './edit_ingredient.vue';
+	import displayIngredient from './display_ingredient.vue';
 	export default {
 		components: {
 			listCard,
 			search,
-			editIngredient
+			editIngredient,
+			displayIngredient
 		},
 		data () {
 			return {
@@ -69,7 +81,7 @@
 				recipeName: '',
 				ingredient: '',
 				ingredientList:[],
-				recipeDescription:  'Anleitung',
+				recipeDescription:  'Zubereitung:',
 				description:'',
 				recipe: {},
 				enterFruit: "Gib eine Zutat ein",
@@ -119,14 +131,11 @@
 	li.editable-ingredient {
 		width: 100%;
 	}
-	.text-large {
-		font-size: 1.2em;
-		font-weight: 511;
-		color: #666;
+
+	#description, input{
+		margin-left: 0px;
+		margin-top: 0px;
+		border-radius: .5em
 	}
-	.text-medium {
-		font-size: 1.1em;
-		font-weight: 511;
-		color: #666;
-	}
+
 </style>

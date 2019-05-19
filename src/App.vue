@@ -1,69 +1,64 @@
 <template>
 	<div id="app">
-		<div class="row">
-			<div class="col-sm-4 col-xs-12">
-				<b-card
-					title="Verfügbare Zutaten"
-					sub-title="Hier siehst Du die eingegebenen Zutaten"
-					>
-					<search
-						v-bind:defaultText="enterIngredient"
-						v-bind:availableItems="ingredients"
-						v-on:update-list="findRecipes">
-					</search>
+		<b-container-fluid>
+			<b-row>
+				<b-col cols="12" md="4">
+					<b-card
+						title="Verfügbare Zutaten"
+						sub-title="Hier siehst Du die eingegebenen Zutaten"
+						>
+						<search
+							v-bind:defaultText="enterIngredient"
+							v-bind:availableItems="ingredients"
+							v-on:update-list="findRecipes">
+						</search>
 
-					<list-card
-						v-bind:display="displayIngredients"
-						v-bind:list="ingredientList"
-						v-on:remove-item="removeIngredient"item
-					</list-card>
-				</b-card>
-			</div>
-			<div class="col-sm-4 col-xs-12">
-				<b-card
-					title="Gefundene Rezepte"
-					sub-title="Hier siehst Du die Ergebnisse">
-					<ul>
-						<li v-for="recipe in matchingAllIngredients"
-						:key="ingredient"
-						>{{recipe.name}}
-						</li>
-					</ul>
-				</b-card>
-			</div>
-			<div class="col-sm-4 col-xs-12">
-				<b-card
-					title="Rezepte mit fehlenden Zutaten"
-					sub-title="Hier siehst Du die Ergebnisse">
-					<ul>
-						<li v-for="recipe in matchingMostIngredients"
-						:key="ingredient"
-						>{{recipe.name}}
-						</li>
-					</ul>
-				</b-card>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-sm-6">
-				<create-recipe
-					v-bind:existingIngredients="ingredients"
-					v-on:save-recipe="addRecipe">
-				</create-recipe>
-			</div>
-			<div class="col-sm-6">
-				<b-card
-					title="Zutat hinzufügen"
-					>
-
-				</b-card>
-			</div>
-		</div>
+						<list-card
+							v-bind:display="displayIngredients"
+							v-bind:list="ingredientList"
+							v-on:remove-item="removeIngredient"item
+						</list-card>
+					</b-card>
+				</b-col>
+				<b-col cols="12" sm="6" md="4">
+					<b-card
+						title="Gefundene Rezepte"
+						sub-title="Hier siehst Du die Ergebnisse">
+						<ul>
+							<li v-for="recipe in matchingAllIngredients"
+							:key="ingredient"
+							>{{recipe.name}}
+							</li>
+						</ul>
+					</b-card>
+				</b-col>
+				<b-col cols="12" sm="6" md="4">
+					<b-card
+						title="Rezepte mit fehlenden Zutaten"
+						sub-title="Hier siehst Du die Ergebnisse">
+						<ul>
+							<li v-for="recipe in matchingMostIngredients"
+							:key="ingredient"
+							>{{recipe.name}}
+							</li>
+						</ul>
+					</b-card>
+				</b-col>
+			</b-row>
+			<b-row>
+				<b-col>
+					<create-recipe
+						v-bind:existingIngredients="ingredients"
+						v-on:save-recipe="addRecipe">
+					</create-recipe>
+				</b-col>
+			</b-row>
+		</b-container-fluid>
 	</div>
 
 </template>
 
-<script>
+<script type="text/javascript">
 	import {_} from 'vue-underscore';
 	import rezepte from './assets/data/rezepte.json';
 	import zutaten from './assets/data/zutaten.json';
@@ -157,8 +152,6 @@
 				}
 			},
 		},
-		computed: {
-		}
 	}
 </script>
 
@@ -192,5 +185,8 @@ body {
 }
 .card {
 	margin-bottom:30px;
+}
+div.card {
+	border-radius: .5em;
 }
 </style>

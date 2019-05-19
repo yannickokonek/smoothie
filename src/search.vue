@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<div class="input-container">
-			<input class="input"
+			<input class="input mb-2"
 				:placeholder="defaultText"
 				v-model="listItem"
 				v-on:keyup.enter="addItem"
