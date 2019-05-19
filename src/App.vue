@@ -1,59 +1,57 @@
 <template>
 	<div id="app">
-		<b-container-fluid>
-			<b-row>
-				<b-col cols="12" md="4">
-					<b-card
-						title="Verfügbare Zutaten"
-						sub-title="Hier siehst Du die eingegebenen Zutaten"
-						>
-						<search
-							v-bind:defaultText="enterIngredient"
-							v-bind:availableItems="ingredients"
-							v-on:update-list="findRecipes">
-						</search>
+		<b-row>
+			<b-col cols="12" md="4">
+				<b-card
+					title="Verfügbare Zutaten"
+					sub-title="Hier siehst Du die eingegebenen Zutaten"
+					>
+					<search
+						v-bind:defaultText="enterIngredient"
+						v-bind:availableItems="ingredients"
+						v-on:update-list="findRecipes">
+					</search>
 
-						<list-card
-							v-bind:display="displayIngredients"
-							v-bind:list="ingredientList"
-							v-on:remove-item="removeIngredient"item
-						</list-card>
-					</b-card>
-				</b-col>
-				<b-col cols="12" sm="6" md="4">
-					<b-card
-						title="Gefundene Rezepte"
-						sub-title="Hier siehst Du die Ergebnisse">
-						<ul>
-							<li v-for="recipe in matchingAllIngredients"
-							:key="ingredient"
-							>{{recipe.name}}
-							</li>
-						</ul>
-					</b-card>
-				</b-col>
-				<b-col cols="12" sm="6" md="4">
-					<b-card
-						title="Rezepte mit fehlenden Zutaten"
-						sub-title="Hier siehst Du die Ergebnisse">
-						<ul>
-							<li v-for="recipe in matchingMostIngredients"
-							:key="ingredient"
-							>{{recipe.name}}
-							</li>
-						</ul>
-					</b-card>
-				</b-col>
-			</b-row>
-			<b-row>
-				<b-col>
-					<create-recipe
-						v-bind:existingIngredients="ingredients"
-						v-on:save-recipe="addRecipe">
-					</create-recipe>
-				</b-col>
-			</b-row>
-		</b-container-fluid>
+					<list-card
+						v-bind:display="displayIngredients"
+						v-bind:list="ingredientList"
+						v-on:remove-item="removeIngredient"item
+					</list-card>
+				</b-card>
+			</b-col>
+			<b-col cols="12" sm="6" md="4">
+				<b-card
+					title="Gefundene Rezepte"
+					sub-title="Hier siehst Du die Ergebnisse">
+					<ul>
+						<li v-for="recipe in matchingAllIngredients"
+						:key="ingredient"
+						>{{recipe.name}}
+						</li>
+					</ul>
+				</b-card>
+			</b-col>
+			<b-col cols="12" sm="6" md="4">
+				<b-card
+					title="Rezepte mit fehlenden Zutaten"
+					sub-title="Hier siehst Du die Ergebnisse">
+					<ul>
+						<li v-for="recipe in matchingMostIngredients"
+						:key="ingredient"
+						>{{recipe.name}}
+						</li>
+					</ul>
+				</b-card>
+			</b-col>
+		</b-row>
+		<b-row>
+			<b-col>
+				<create-recipe
+					v-bind:existingIngredients="ingredients"
+					v-on:save-recipe="addRecipe">
+				</create-recipe>
+			</b-col>
+		</b-row>
 	</div>
 
 </template>
@@ -181,10 +179,15 @@ ul {
 }
 body {
 	background-color:#ddd;
+	background: url(assets/images/fruite_background.jpg);
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-size:cover;
 	padding:30px;
 }
 .card {
 	margin-bottom:30px;
+	opacity:0.95;
 }
 div.card {
 	border-radius: .5em;
