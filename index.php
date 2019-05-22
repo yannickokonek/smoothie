@@ -4,7 +4,7 @@
 
 <?php
 
-$servername = "localhost";
+$test = "localhost";
 $username = "smoothie";
 $password = "geradeZahl246-bplaced";
 
