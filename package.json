@@ -16,7 +16,8 @@
     "jquery": "^3.4.1",
     "npm": "^6.9.0",
     "vue": "^2.6.10",
-    "vue-underscore": "^0.1.4"
+    "vue-underscore": "^0.1.4",
+    "vuetify": "^1.5.14"
   },
   "browserslist": [
     "> 1%",
