@@ -1,5 +1,9 @@
 <template>
 	<div id="app">
+		<div>
+			<h4>php test</h4>
+			<button v-on:click="getData">click me</button>
+		</div>
 		<b-row>
 			<b-col cols="12" md="4">
 				<b-card
@@ -58,11 +62,12 @@
 
 <script type="text/javascript">
 	import {_} from 'vue-underscore';
-	import rezepte from './assets/data/rezepte.json';
-	import zutaten from './assets/data/zutaten.json';
+	// import rezepte from './assets/data/rezepte.json';
+	// import zutaten from './assets/data/zutaten.json';
 	import listCard from './list_card.vue';
 	import createRecipe from './create_recipe.vue';
 	import search from './search.vue';
+	import axios from "axios";
 	export default {
 		name: 'app',
 		components: {
@@ -76,7 +81,7 @@
 				enterIngredient: 'Gib eine Zutat ein',
 				ingredientList: [],
 				ingredient:'',
-				recipes: rezepte,
+				recipes: [],
 				ingredients: zutaten,
 				matchingAllIngredients:[],
 				matchingMostIngredients:[],
@@ -89,6 +94,9 @@
 			};
 		},
 		methods: {
+			getData() {
+				axios.get("https://smoothie-wizard.de/").then(response => console.log(response))
+			},
 			removeIngredient(item) {
 				this.ingredients = this.$_.filter(this.ingredients, function(f){return f.name != item.name});
 				this.findRecipes();
