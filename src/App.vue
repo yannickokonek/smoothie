@@ -1,9 +1,5 @@
 <template>
 	<div id="app">
-		<div>
-			<h4>php test</h4>
-			<button v-on:click="getData">click me</button>
-		</div>
 		<b-row>
 			<b-col cols="12" md="4">
 				<b-card
@@ -82,7 +78,14 @@
 				ingredientList: [],
 				ingredient:'',
 				recipes: [],
-				ingredients: zutaten,
+				ingredients: [
+					{name:"Banane", unit:"Stück"},
+					{name:"Apfel", unit:"Stück"},
+					{name:"Erdbeere", unit:"Stück"},
+					{name:"Kiwi", unit:"Stück"},
+					],
+				ingredientNames: ["Banane", "Apfel", "Kiwi", "Äpfel", "Erdbeere", "Erdbeeren"],
+				units: ["Stück", "g", "ml", "Pck"],
 				matchingAllIngredients:[],
 				matchingMostIngredients:[],
 				fields: [
@@ -93,10 +96,19 @@
 				]
 			};
 		},
+
+		mounted () {
+				axios.get('https://smoothie-wizard.de/get_ingredients.php')
+					 .then(response => (this.ingredients = response.data));
+				axios.get('https://smoothie-wizard.de/get_recipes.php')
+					 .then(response => (this.recipes = response.data));
+				axios.get('https://smoothie-wizard.de/get_ingredient_names.php')
+					 .then(response => (this.ingredientNames = response.data));
+				axios.get('https://smoothie-wizard.de/get_units.php')
+					 .then(response => (this.units = response.data));
+		},
+
 		methods: {
-			getData() {
-				axios.get("https://smoothie-wizard.de/").then(response => console.log(response))
-			},
 			removeIngredient(item) {
 				this.ingredients = this.$_.filter(this.ingredients, function(f){return f.name != item.name});
 				this.findRecipes();
